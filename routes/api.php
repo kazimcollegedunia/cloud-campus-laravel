@@ -9,9 +9,13 @@ Route::get('/test', function () {
 });
 
 
+Route::prefix('v1')->group(function () {
+    Route::get('employees/search', [EmployeeController::class, 'search']);
+    Route::apiResource('employees', EmployeeController::class);
+});
 
 Route::apiResource('departments', DepartmentController::class);
-Route::apiResource('employees', EmployeeController::class);
+// Route::apiResource('employees', EmployeeController::class);
 
 // Search employee
 Route::get('employees/search', [EmployeeController::class, 'search']);
