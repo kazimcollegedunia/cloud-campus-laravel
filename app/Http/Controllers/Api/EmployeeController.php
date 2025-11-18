@@ -3,88 +3,179 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class EmployeeController extends Controller
 {
-
     /**
-     * Display a listing of the resource.
+     * Display a listing of employees.
      */
     public function index()
     {
-        //
+        $employees = Employee::with('department')->get();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Employees retrieved successfully',
+            'data' => $employees,
+        ], 200);
     }
 
     /**
-     * Display the specified resource.
+     * Store a newly created employee.
      */
-    public function show(string $id)
-    {
-        
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:employees',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:employees,email',
             'department_id' => 'required|exists:departments,id',
-            'contacts' => 'array',
-            'addresses' => 'array'
         ]);
 
-        $employee = Employee::create($data);
-
-        if (!empty($data['contacts'])) {
-            foreach ($data['contacts'] as $contact) {
-                $employee->contactNumbers()->create($contact);
-            }
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Error',
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
-        if (!empty($data['addresses'])) {
-            foreach ($data['addresses'] as $address) {
-                $employee->addresses()->create($address);
-            }
-        }
+        try {
+            $employee = Employee::create($validator->validated());
 
-        return new EmployeeResource($employee->load('contactNumbers', 'addresses', 'department'));
+            return response()->json([
+                'status' => true,
+                'message' => 'Employee created successfully',
+                'data' => $employee,
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to create employee',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
+    /**
+     * Display the specified employee.
+     */
+    public function show($id)
+    {
+        $employee = Employee::with('department')->find($id);
+
+        if (! $employee) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Employee not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Employee retrieved successfully',
+            'data' => $employee,
+        ], 200);
+    }
+
+    /**
+     * Update the specified employee.
+     */
+    public function update(Request $request, int $id)
+    {
+        try {
+            $employee = Employee::find($id);
+
+            if (! $employee) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Employee not found',
+                ], 404);
+            }
+
+            // Use validator for manual error handling
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:employees,email,'.$id,
+                'department_id' => 'required|exists:departments,id',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validation Error',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            // Update employee
+            $employee->update($validator->validated());
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Employee updated successfully',
+                'data' => $employee,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to update employee',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Remove the specified employee.
+     */
+    public function destroy($id)
+    {
+        $employee = Employee::find($id);
+
+        if (! $employee) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Employee not found',
+            ], 404);
+        }
+
+        try {
+            $employee->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Employee deleted successfully',
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to delete employee',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Search employees by name or email.
+     */
     public function search(Request $request)
     {
-        $query = Employee::query();
+        $query = $request->input('query');
 
-        if ($request->name) {
-            $query->where('name', 'like', "%{$request->name}%");
-        }
+        $employees = Employee::where('name', 'LIKE', "%{$query}%")
+            ->orWhere('email', 'LIKE', "%{$query}%")
+            ->with('department')
+            ->get();
 
-        if ($request->email) {
-            $query->where('email', $request->email);
-        }
-
-        if ($request->department_id) {
-            $query->where('department_id', $request->department_id);
-        }
-
-        return EmployeeResource::collection(
-            $query->with('department')->paginate(10)
-        );
+        return response()->json([
+            'status' => true,
+            'message' => 'Search results',
+            'data' => $employees,
+        ], 200);
     }
-
 }
