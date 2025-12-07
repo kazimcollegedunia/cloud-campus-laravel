@@ -49,5 +49,9 @@ class User extends Authenticatable
         ];
     }
 
+    public static function getAllStudent(){
+        return self::select('id','name')->where('role','student')->get();
+    }
+
    
 }

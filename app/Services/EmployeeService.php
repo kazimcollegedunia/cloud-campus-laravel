@@ -89,4 +89,10 @@ class EmployeeService
         return $this->repo->search($term, $perPage);
     }
 
+    public static function createEmployee(array $data)
+    {
+        $employeeService = app(EmployeeService::class);
+        return $employeeService->create($data);
+    }
+
 }
