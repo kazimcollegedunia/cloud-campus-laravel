@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\V1\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\Auth\RefreshTokenController;
-use App\Models\Student;
+use App\Http\Controllers\Api\V1\AttendanceController;
 
 Route::get('/test', function () {
     return response()->json(['message' => 'API working!']);
@@ -22,9 +22,15 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('employees', EmployeeController::class);
     Route::apiResource('departments', DepartmentController::class);
     Route::apiResource('student', StudentController::class);
+    Route::get('student-lists', [StudentController::class,"index"]);
     Route::get('all-class', [StudentController::class, 'getClass']);
     Route::get('all-section', [StudentController::class,'getSection']);
     Route::get('all-student', [StudentController::class,'getStudent']);
+
+    Route::prefix('attendance')->group(function () {
+        Route::post('mark', [AttendanceController::class, 'markAttendance']);
+        Route::get('get-attendance', [AttendanceController::class, 'getAttendance']); 
+    });
 });
 
 

@@ -24,7 +24,7 @@ class StudentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
+            'name' => 'required|string',
             'class_id' => 'required|integer',
             'section' => 'required|string',
             // 'roll_number' => 'required|string|unique:employees,roll_number',
@@ -33,6 +33,21 @@ class StudentRequest extends FormRequest
             'parent_name' => 'required|string|max:100',
             'parent_phone' => 'required|string|max:15',
             'address' => 'required|string|max:255'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'user_id.required' => 'Please Select a User.',
+            'user_id.exists' => 'The selected user id is invalid.',
+            'class_id.required' => 'The class id field is required.',
+            'section.required' => 'The section field is required.',
+            'dob.required' => 'The date of birth field is required.',   
+            'gender.required' => 'The gender field is required.',   
+            'parent_name.required' => 'The parent name field is required.',   
+            'parent_phone.required' => 'The parent contact No. field is required.',   
+            'address.required' => 'The address field is required.',   
         ];
     }
 

@@ -7,6 +7,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Attendance;
 
 class User extends Authenticatable
 {
@@ -50,7 +51,14 @@ class User extends Authenticatable
     }
 
     public static function getAllStudent(){
-        return self::select('id','name')->where('role','student')->get();
+        return self::select('id','name')
+        // ->join('students as stu','students.user_id','=','users.id')
+        ->where('role','student')->get();
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
     }
 
    
