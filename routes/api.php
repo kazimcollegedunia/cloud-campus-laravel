@@ -30,6 +30,8 @@ Route::prefix('v1')->group(function () {
     Route::prefix('attendance')->group(function () {
         Route::post('mark', [AttendanceController::class, 'markAttendance']);
         Route::get('get-attendance', [AttendanceController::class, 'getAttendance']); 
+        Route::get('today-attendance-summary', [AttendanceController::class, 'getTodayAttendanceSummary']); 
+        // getTodayAttendanceSummary
     });
 });
 

@@ -16,7 +16,7 @@ class EmployeeResource extends JsonResource
                 'id' => $this->department->id,
                 'name' => $this->department->name
             ] : null,
-            'contact_numbers' => ContactNumberResource::collection($this->whenLoaded('contactNumbers')),
+            // 'contact_numbers' => ContactNumberResource::collection($this->whenLoaded('contactNumbers')),
             'addresses' => AddressResource::collection($this->whenLoaded('addresses')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
