@@ -28,8 +28,10 @@ class AttendanceService
                 'users.name',
                 'a.date',
                 'a.status',
+                'a.remarks',
                 's.class_id',
-                's.section',];
+                's.section',
+            ];
         return $this->userRepo->getAllStudent($dataPass);
     }
 

@@ -11,7 +11,7 @@ class ApiGatewayService
         $dataPass = [
             "user_id" => "1",
             "tenant_id" => "1",
-            "class_id" => isset($request->class_id)  ? $request->class_id : 1,
+            "class_id" => isset($request->class_id)  ? $request->class_id : null,
             "from_date" => isset($request->date) ?  $request->date : date('Y-m-d'),
             "to_date" => isset($request->date) ?  $request->date : date('Y-m-d'),
             "section" => isset($request->section) ?  $request->section : null,

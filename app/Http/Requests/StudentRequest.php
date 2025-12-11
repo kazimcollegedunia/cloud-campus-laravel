@@ -27,6 +27,7 @@ class StudentRequest extends FormRequest
             'name' => 'required|string',
             'class_id' => 'required|integer',
             'section' => 'required|string',
+            'parent_email' => 'required|string|unique:users,email',
             // 'roll_number' => 'required|string|unique:employees,roll_number',
             'dob' => 'required|date',
             'gender' => 'required|in:male,female,other',
@@ -48,6 +49,8 @@ class StudentRequest extends FormRequest
             'parent_name.required' => 'The parent name field is required.',   
             'parent_phone.required' => 'The parent contact No. field is required.',   
             'address.required' => 'The address field is required.',   
+            "parent_email.required" => "The parent_email field is required.",
+            "parent_email.unique" => "The parent_email  has already been taken.",
         ];
     }
 

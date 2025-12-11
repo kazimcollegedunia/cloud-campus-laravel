@@ -11,29 +11,40 @@ use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\Auth\RefreshTokenController;
 use App\Http\Controllers\Api\V1\AttendanceController;
+use App\Http\Controllers\Api\V1\DashboardController;
+use App\Http\Middleware\EnsureTokenIsValid;
 
 Route::get('/test', function () {
     return response()->json(['message' => 'API working!']);
 });
 
-
-Route::prefix('v1')->group(function () {
-    Route::get('employees/search', [EmployeeController::class, 'search']);
-    Route::apiResource('employees', EmployeeController::class);
-    Route::apiResource('departments', DepartmentController::class);
-    Route::apiResource('student', StudentController::class);
-    Route::get('student-lists', [StudentController::class,"index"]);
-    Route::get('all-class', [StudentController::class, 'getClass']);
-    Route::get('all-section', [StudentController::class,'getSection']);
-    Route::get('all-student', [StudentController::class,'getStudent']);
-
-    Route::prefix('attendance')->group(function () {
-        Route::post('mark', [AttendanceController::class, 'markAttendance']);
-        Route::get('get-attendance', [AttendanceController::class, 'getAttendance']); 
-        Route::get('today-attendance-summary', [AttendanceController::class, 'getTodayAttendanceSummary']); 
-        // getTodayAttendanceSummary
-    });
+Route::middleware([EnsureTokenIsValid::class])->get('/test2', function () {
+    return 'OK';
 });
+
+
+// Route::prefix('v1')->middleware(['auth:api', EnsureTokenIsValid::class])->group(function () {
+Route::prefix('v1')->middleware(['auth:api',EnsureTokenIsValid::class])->group(function () {
+        Route::get('employees/search', [EmployeeController::class, 'search']);
+        Route::apiResource('employees', EmployeeController::class);
+        Route::apiResource('departments', DepartmentController::class);
+        Route::apiResource('student', StudentController::class);
+        Route::get('student-lists', [StudentController::class,"index"]);
+        Route::get('all-class', [StudentController::class, 'getClass']);
+        Route::get('all-section', [StudentController::class,'getSection']);
+        Route::get('all-student', [StudentController::class,'getStudent']);
+
+        Route::prefix('attendance')->group(function () {
+            Route::post('mark', [AttendanceController::class, 'markAttendance']);
+            Route::post('mark-bulk', [AttendanceController::class, 'markAttendanceBulk']);
+            Route::get('get-attendance', [AttendanceController::class, 'getAttendance']); 
+            Route::get('today-attendance-summary', [AttendanceController::class, 'getTodayAttendanceSummary']); 
+        });
+
+        Route::prefix('dashboard')->group(function () {
+            Route::get('/', [DashboardController::class, 'index']);
+        });
+    });
 
 
 // Route::middleware(['tenant'])->group(function () {

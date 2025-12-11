@@ -21,8 +21,8 @@ class StudentController extends Controller
         $student->join('users', 'students.user_id', '=', 'users.id')->select('students.*', 'users.name as student_name');
         // dd($request->filled('class'));
         // Filter by class
-        if ($request->filled('class')) {
-            $student->where('class', $request->class);
+        if ($request->filled('class_id')) {
+            $student->where('class_id', $request->class_id);
         }
 
         // Filter by section

@@ -8,6 +8,7 @@ class TenantMiddleware
 {
     public function handle($request, Closure $next)
     {
+        dd(2345);
         // $subdomain = explode('.', $request->getHost())[0];
 
         // $tenant = Tenant::where('subdomain', $subdomain)->first();

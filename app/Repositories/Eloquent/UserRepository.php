@@ -17,7 +17,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function getAllStudent($dataPass = [])
     {
-        $date = $dataPass['date'] ?? null;
+        $date = $dataPass['from_date'] ?? null;
 
         $query =  $this->model
             ->leftJoin('attendances as a', function ($join) use ($date) {
@@ -37,7 +37,18 @@ class UserRepository implements UserRepositoryInterface
                 $query->where('s.section', $dataPass['section']);
             }
             
-            return $query->select($dataPass['select'])
+             return  $query->select($dataPass['select'])
             ->get();
+
+            // dd($query->toRawSql());
     }
 }
+
+
+// array:3 [ // app/Repositories/Eloquent/UserRepository.php:42
+//   0 => "2025-12-11"
+//   1 => "student"
+//   2 => "A"
+// ]
+// select `users`.`id` as `user_id`, `users`.`name`, `a`.`date`, `a`.`status`, `s`.`class_id`, `s`.`section` from `users` left join `attendances` as `a` on `a`.`user_id` = `users`.`id` and `a`.`date` = ? inner join `students` as `s` on `s`.`user_id` = `users`.`id` where `users`.`role` = ? and `s`.`section` = ?"
+
