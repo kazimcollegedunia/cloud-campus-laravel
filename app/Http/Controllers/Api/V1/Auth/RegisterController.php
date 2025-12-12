@@ -4,27 +4,31 @@ namespace App\Http\Controllers\Api\V1\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
+use App\Services\AuthService;
+use App\Services\ApiGatewayService;
 
 class RegisterController extends Controller
 {
+    public $auth;
+    public $apiGateway;
+
+    public function __construct(AuthService $studentService,ApiGatewayService $apiGateway){
+        $this->auth = $studentService;
+        $this->apiGateway = $apiGateway;
+    }
+
+    
     public function register(RegisterRequest $request)
     {
-        $user = User::create([
-            'tenant_id' => $request->tenant_id,
-            'name'      => $request->name,
-            'email'     => $request->email,
-            'password'  => bcrypt($request->password),
-            'role'      => $request->role,
-        ]);
+        $user = $this->auth->registerUsers($request);
+        writeLog(
+            'New Acount create',
+            "Account created successfully",
+            $request->all(),
+            $user,
+        );
 
-        $token =  [];//$user->createToken('authToken')->accessToken;
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Account created successfully',
-            'token' => $token,
-            'user' => $user,
-        ], 201);
+        return $this->apiGateway::success("Account created successfully",$user,200);
     }
 }
 

@@ -3,12 +3,21 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Log;
+use App\Repositories\Contracts\UserRepositoryInterface;
 
 
 use Illuminate\Support\Facades\Auth;
 
 class AuthService
 {
+    public $userRepo;
+    public $apiGateway;
+
+    public function __construct(UserRepositoryInterface $userRepo,ApiGatewayService $apiGateway){
+        $this->userRepo = $userRepo;
+        $this->apiGateway = $apiGateway;
+    }
+
     public function login(array $credentials)
     {
         // Check Email + Password
@@ -30,5 +39,18 @@ class AuthService
             'token' => $token,
             'user'  => $user,
         ];
+    }
+
+    public function registerUsers($request){
+        $userDetails = [
+            'tenant_id' => $request->tenant_id,
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'phone'     => $request->phone,
+            'password'  => bcrypt($request->password),
+            'role'      => $request->role
+            ];
+
+        return  $this->userRepo->createUser($userDetails); 
     }
 }

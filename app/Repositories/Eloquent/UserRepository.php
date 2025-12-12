@@ -4,7 +4,9 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use Exception;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\Catch_;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -42,13 +44,29 @@ class UserRepository implements UserRepositoryInterface
 
             // dd($query->toRawSql());
     }
+
+    public function createUser(array $data){
+        try{
+            return  User::create([
+                'tenant_id' => $data['tenant_id'],
+                'name'      => $data['name'],
+                'email'     => $data['email'] ?? null,
+                'phone'     => $data['phone'] ?? 99999999999,
+                'password'  => isset($data['password']) ? $data['password'] : bcrypt('password'),
+                'role'      => isset($data['role']) ? $data['role'] : 'student',
+            ]);
+        
+        }catch(Exception $e){
+             writeLog(
+                action: "DB Action fail",
+                description: "User freation fail",
+                request: $data,
+                response: [],
+                status: "Fail"
+            );
+        }
+        
+    }
 }
 
-
-// array:3 [ // app/Repositories/Eloquent/UserRepository.php:42
-//   0 => "2025-12-11"
-//   1 => "student"
-//   2 => "A"
-// ]
-// select `users`.`id` as `user_id`, `users`.`name`, `a`.`date`, `a`.`status`, `s`.`class_id`, `s`.`section` from `users` left join `attendances` as `a` on `a`.`user_id` = `users`.`id` and `a`.`date` = ? inner join `students` as `s` on `s`.`user_id` = `users`.`id` where `users`.`role` = ? and `s`.`section` = ?"
 

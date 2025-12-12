@@ -22,6 +22,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone',
         'tenant_id',
         'password',
         'role'
@@ -60,6 +61,5 @@ class User extends Authenticatable
     {
         return $this->hasMany(Attendance::class);
     }
-
    
 }

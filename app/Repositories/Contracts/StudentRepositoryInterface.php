@@ -5,6 +5,8 @@ namespace App\Repositories\Contracts;
 interface StudentRepositoryInterface
 {
     public function all($request);
+    public function createStudent(array $data);
+    public function isAdmissionNoExists($adminsionId);
     // public function find($id);
     // public function create(array $data);
     // public function update($id, array $data);

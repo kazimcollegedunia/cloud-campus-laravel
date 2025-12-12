@@ -121,13 +121,12 @@ class AttendanceController extends Controller
     public function getAttendance(Request $request)
     {
         $dataPass = $this->apiGateway->prepareDataPass($request);
-       $studentAttendances =  $this->attendanceService->fetchAllAttendances($dataPass);
+        $studentAttendances =  $this->attendanceService->fetchAllAttendances($dataPass);
         return $this->apiGateway::success('Attendance fetched successfully', $studentAttendances);   
     }
 
     public function getTodayAttendanceSummary(Request $request){
         $dataPass = $this->apiGateway->prepareDataPass($request); 
-        // dd($dataPass);
         $studentAttendances =  $this->attendanceService->getTodayAttendanceSummary($dataPass);
         return $this->apiGateway::success('Attendance fetched successfully', $studentAttendances);
     }

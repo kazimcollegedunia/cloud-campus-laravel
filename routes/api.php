@@ -24,15 +24,15 @@ Route::middleware([EnsureTokenIsValid::class])->get('/test2', function () {
 
 
 // Route::prefix('v1')->middleware(['auth:api', EnsureTokenIsValid::class])->group(function () {
-Route::prefix('v1')->middleware(['auth:api',EnsureTokenIsValid::class])->group(function () {
+Route::prefix('v1')->middleware(["auth:api"])->group(function () {
         Route::get('employees/search', [EmployeeController::class, 'search']);
         Route::apiResource('employees', EmployeeController::class);
         Route::apiResource('departments', DepartmentController::class);
         Route::apiResource('student', StudentController::class);
-        Route::get('student-lists', [StudentController::class,"index"]);
-        Route::get('all-class', [StudentController::class, 'getClass']);
-        Route::get('all-section', [StudentController::class,'getSection']);
-        Route::get('all-student', [StudentController::class,'getStudent']);
+        Route::get('student-lists', [StudentController::class,"studentLists"]);
+        // Route::get('all-class', [StudentController::class, 'getClass']);
+        // Route::get('all-section', [StudentController::class,'getSection']);
+        // Route::get('all-student', [StudentController::class,'getStudent']);
 
         Route::prefix('attendance')->group(function () {
             Route::post('mark', [AttendanceController::class, 'markAttendance']);

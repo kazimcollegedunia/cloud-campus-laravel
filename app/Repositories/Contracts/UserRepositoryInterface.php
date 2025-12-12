@@ -5,6 +5,7 @@ namespace App\Repositories\Contracts;
 interface UserRepositoryInterface
 {
     public function getAllStudent($dataPass);
+    public function createUser(array $dataPass);
     // public function find($id);
     // public function create(array $data);
     // public function update($id, array $data);

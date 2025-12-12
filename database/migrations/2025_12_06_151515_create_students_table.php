@@ -16,6 +16,7 @@ return new class extends Migration
 
             // Link to main user table
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('tenant_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('admission_no')->unique();
             $table->unsignedBigInteger('class_id')->nullable();

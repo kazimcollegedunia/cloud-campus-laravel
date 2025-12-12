@@ -3,6 +3,7 @@
 namespace App\Repositories\Eloquent;
 
 use App\Models\Student;
+use App\Models\User;
 use App\Repositories\Contracts\StudentRepositoryInterface;
 
 class StudentRepository implements StudentRepositoryInterface
@@ -14,89 +15,71 @@ class StudentRepository implements StudentRepositoryInterface
         $this->model = $student;
     }
 
-    public function all($request)
+    public function all($dataPass)
     {
-        dd($request->all());
-        // return $this->model->with(['department', 'contactNumbers', 'addresses'])->get();
+        $student = Student::query()
+            ->join('users', 'students.user_id', '=', 'users.id');
 
-
-        $student = $this->model->newQuery();
-        $student->join('users', 'students.user_id', '=', 'users.id')->select('students.*', 'users.name as student_name');
-        // dd($request->filled('class'));
-        // Filter by class
-        if ($request->filled('class')) {
-            $student->where('class', $request->class);
+        // Apply select if provided, else fallback to default select
+        if (!empty($dataPass['fields'])) {
+            $student->select($dataPass['fields']);
+        } else {
+            $student->select('students.*', 'users.name as student_name');
         }
 
-        // Filter by section
-        if ($request->filled('section')) {
-            $student->where('section', $request->section);
+        // class filter
+        if (!empty($dataPass['class_id'])) {
+            $student->where('class_id', $dataPass['class_id']);
         }
 
-        // Search by name, class, roll_no
-        if ($request->filled('search')) {
-            $search = $request->search;
+        // section filter
+        if (!empty($dataPass['section'])) {
+            $student->where('section', $dataPass['section']);
+        }
 
-            $student->where(function($q) use ($search) {
-                $q->where('users.name', 'LIKE', "%{$search}%")
-                ->orWhere('class_id', 'LIKE', "%{$search}%");
-                // ->orWhere('roll_no', 'LIKE', "%{$search}%");
+        $student->where('students.tenant_id', $dataPass['tenant_id']);
+        
+        // term search
+        if (!empty($dataPass['term'])) {
+            $term = $dataPass['term'];
+            $student->where(function($q) use ($term) {
+                $q->where('users.name', 'LIKE', "%{$term}%")
+                ->orWhere('students.class_id', 'LIKE', "%{$term}%")
+                ->orWhere('students.section', 'LIKE', "%{$term}%")
+                ->orWhere('students.admission_no', 'LIKE', "%{$term}%");
             });
         }
 
-        $sutdentData = $student->orderBy('id', 'DESC')->get();
-        $sutdentCount = $student->count();
-        $data = [ "studentData" => $sutdentData, "studentCount" => $sutdentCount];
+        $studentData  = $student->orderBy('students.id', 'DESC')->get();
+        $studentCount = $student->count();
 
+        return [
+            "studentData"  => $studentData,
+            "studentCount" => $studentCount
+        ];
     }
 
-    // public function find($id)
-    // {
-    //     return $this->model->with(['department', 'contactNumbers', 'addresses'])->find($id);
-    // }
+    public function createStudent(array $data)
+    {
+        return Student::create([
+            'user_id'      => $data['user_id'],
+            'admission_no' => $data['admission_no'],
+            'class_id'     => $data['class_id'],
+            'section'      => $data['section'],
+            'dob'          => $data['dob'],
+            'gender'       => $data['gender'],
+            'parent_name'  => $data['parent_name'],
+            'parent_email' => $data['parent_email'],
+            'parent_phone' => $data['parent_phone'],
+            'address'      => $data['address'],
+            'tenant_id'      => $data['tenant_id'],
+            'status'       => 'active',
+        ]);
+    }
 
-    // public function create(array $data)
-    // {
-    //     return $this->model->create($data);
-    // }
+    public function isAdmissionNoExists($admissionNo)
+    {
+        return $this->model->where('admission_no', $admissionNo)->exists();
+    }
 
-    // public function update($id, array $data)
-    // {
-    //     $emp = $this->model->findOrFail($id);
-    //     $emp->update($data);
-    //     return $emp;
-    // }
-
-    // public function delete($id)
-    // {
-    //     $emp = $this->model->findOrFail($id);
-    //     return $emp->delete();
-    // }
-
-    //  public function search(?string $term = null, int $perPage = 10)
-    // {
-    //     $query = $this->model->with(['department', 'contactNumbers', 'addresses']);
-
-    //     if ($term) {
-    //         $query->where(function ($q) use ($term) {
-    //             $q->where('name', 'LIKE', "%{$term}%")
-    //               ->orWhere('email', 'LIKE', "%{$term}%")
-    //               ->orWhereHas('department', function ($d) use ($term) {
-    //                   $d->where('name', 'LIKE', "%{$term}%");
-    //               })
-    //               ->orWhereHas('contactNumbers', function ($c) use ($term) {
-    //                   $c->where('number', 'LIKE', "%{$term}%");
-    //               })
-    //               ->orWhereHas('addresses', function ($a) use ($term) {
-    //                   $a->where('address_line', 'LIKE', "%{$term}%")
-    //                     ->orWhere('city', 'LIKE', "%{$term}%")
-    //                     ->orWhere('state', 'LIKE', "%{$term}%")
-    //                     ->orWhere('country', 'LIKE', "%{$term}%")
-    //                     ->orWhere('pincode', 'LIKE', "%{$term}%");
-    //               });
-    //         });
-    //     }
-
-    //     return $query->paginate($perPage);
-    // }
 }

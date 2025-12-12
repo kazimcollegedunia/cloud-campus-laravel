@@ -16,6 +16,7 @@ class EnsureTokenIsValid
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // dd( $request->all());
          $user = $request->user();
 
         // No user → token missing or invalid

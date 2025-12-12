@@ -17,6 +17,7 @@ class Student extends Model
         'parent_name',
         'parent_phone',
         'address',
-        'user_id'
+        'user_id',
+        'tenant_id'
     ];
 }

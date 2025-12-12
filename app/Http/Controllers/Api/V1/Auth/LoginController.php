@@ -5,14 +5,17 @@ namespace App\Http\Controllers\Api\V1\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Services\AuthService;
+use App\Services\ApiGatewayService;
 
 class LoginController extends Controller
 {
     protected $auth;
+    protected $apiGateway;
 
-    public function __construct(AuthService $auth)
+    public function __construct(AuthService $auth,ApiGatewayService $apiGateway)
     {
         $this->auth = $auth;
+        $this->apiGateway = $apiGateway;
     }
 
     public function login(LoginRequest $request)
@@ -27,7 +30,7 @@ class LoginController extends Controller
             response: ['message' => 'Signin fail'],
             status: 'fail'
             );
-            return response()->json($data, 401);
+            $this->apiGateway::error($data['message'],[],401);
         }
 
          writeLog(
@@ -38,6 +41,6 @@ class LoginController extends Controller
             status: 'success'
         );
 
-        return response()->json($data, 200);
+        $this->apiGateway::error($data['message'],$data,401);
     }
 }
