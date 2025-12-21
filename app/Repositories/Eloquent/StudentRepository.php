@@ -82,4 +82,27 @@ class StudentRepository implements StudentRepositoryInterface
         return $this->model->where('admission_no', $admissionNo)->exists();
     }
 
+    public function getStudentFeeList($dataPass){
+        return $this->model
+        ->with('user')
+        ->select(
+                'students.id','students.section','students.user_id','students.class_id',
+                'fees.id as fee_id','fees.student_id','fees.receipt_no','fees.receipt_no','fees.amount_inr','fees.paid_amount','fees.due_date','fees.status','fees.month',
+                'fee_types.name as fee_type_name','fee_types.id as fee_type_id','fee_types.amount_inr as  fee_type_amount'
+                )
+                ->leftJoin('fees', function ($join) use ($dataPass) {
+                        $join->on('fees.student_id', '=', 'students.id')
+                            ->where('fees.tenant_id', $dataPass['tenant_id'])
+                            ->where('fees.month', $dataPass['month']);
+                    })
+                    ->leftJoin('fee_types', function ($join) use ($dataPass) {
+                        $join->on('fee_types.tenant_id', '=', 'students.tenant_id')
+                            ->where('fee_types.id', $dataPass['feeType']);
+                    })
+                ->where('students.tenant_id',$dataPass['tenant_id'])
+                ->when(isset($dataPass['section']),fn($q) => $q->where('section',$dataPass['section']))
+                ->when(isset($dataPass['class_id']),fn($q) => $q->where('students.class_id',$dataPass['class_id']))
+                ->get();
+    }
+
 }

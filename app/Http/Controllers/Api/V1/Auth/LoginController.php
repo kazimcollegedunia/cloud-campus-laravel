@@ -30,7 +30,7 @@ class LoginController extends Controller
             response: ['message' => 'Signin fail'],
             status: 'fail'
             );
-            $this->apiGateway::error($data['message'],[],401);
+            return $this->apiGateway::error($data['message'],[],401);
         }
 
          writeLog(
@@ -41,6 +41,6 @@ class LoginController extends Controller
             status: 'success'
         );
 
-        $this->apiGateway::error($data['message'],$data,401);
+        return $this->apiGateway::success($data['message'],$data,201);
     }
 }
