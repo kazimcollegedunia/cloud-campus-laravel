@@ -7,6 +7,7 @@ use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Services\ApiGatewayService;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\SendWelcomeEmailJob;
 
 class StudentService
 {
@@ -52,7 +53,7 @@ class StudentService
                 'tenant_id'   => $tenantId,
                 'name'        => $data['name'],
                 'email' => $data['parent_email'],
-                'phone'       => $data['phone'] ?? null,
+                'phone'       => $data['parent_phone'] ?? null,
             ]);
 
             if (!$user) {
@@ -81,6 +82,8 @@ class StudentService
                 DB::rollBack();
                 return ['status' => false, 'message' => 'Student creation failed'];
             }
+
+            SendWelcomeEmailJob::dispatch($user->id);
 
             DB::commit();
 
