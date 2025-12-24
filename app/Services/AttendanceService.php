@@ -45,7 +45,7 @@ class AttendanceService
     protected function formatAttendanceData($attendances)
     {
         $totalStudents = $attendances->count();
-        $absentStudents = $attendances->where('status', 'absent')->count();
+        $absentStudents = $attendances->whereIn('status', ['absent',null])->count();
         $presentStudents = $attendances->where('status', 'present')->count();
         $attendancespercent = ($totalStudents > 0) ? ($presentStudents / $totalStudents) * 100 : 0;
         $summary = [
