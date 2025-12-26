@@ -29,7 +29,8 @@ class UserRepository implements UserRepositoryInterface
                 }
             })
             ->join('students as s', 's.user_id', '=', 'users.id')
-            ->where('users.role', 'student');
+            ->where('users.role', 'student')
+            ->where('users.tenant_id', $dataPass['tenant_id']);
 
             if(isset($dataPass['class_id']) && $dataPass['class_id'] !== null){
                 $query->where('s.class_id', $dataPass['class_id']);

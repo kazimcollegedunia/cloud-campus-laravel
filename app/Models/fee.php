@@ -18,6 +18,9 @@ class Fee extends Model
         'paid_at',
         'receipt_no',
         'paid_amount',
+        'status',
+        'month',
+        'due_date'
     ];
 
     public function payments()

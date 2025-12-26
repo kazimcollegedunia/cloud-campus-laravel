@@ -20,7 +20,7 @@ class ApiGatewayService
             "role" => isset($request->role) ?  $request->role : 'student',
             "term" => isset($request->search) ?  $request->search : null,
             "student_id" => isset($request->student_id) ?  $request->student_id : null,
-            "status" => isset($request->status) ?  $request->status : null,
+            "status" => isset($request->status) ?  strtolower($request->status) : null,
         ];
         return $dataPass;
    }

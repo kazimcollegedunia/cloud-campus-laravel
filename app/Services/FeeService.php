@@ -38,7 +38,7 @@ class FeeService
         $extra = [
             'submitted_by' => auth()->id(),
             'receipt_no' => $receiptNo,
-            'paid_at' => Carbon::now()->format('Y-m-d'),
+            'paid_at' => Carbon::now()->format('Y-m-d h:i:s'),
             'month' => $request->month ?? Carbon::now()->format('Y-m') ,
             'paid_amount' => $request->paid_amount ?? $request->amount_inr,
             'amount_inr' => $request->paid_amount ?? $request->amount_inr, // auto fetch from fee type
@@ -49,9 +49,10 @@ class FeeService
 
         $payload = $this->prepareDbPayload($request,$extra);
 
-        DB::beginTransaction();
 
         try {
+            DB::beginTransaction();
+
             $fee = $this->repo->store($payload);
 
             DB::commit();
@@ -92,7 +93,7 @@ class FeeService
         if (!empty($extra)) {
             $payload = array_merge($payload, $extra);
         }
-        
+
         return $payload;
     }
 
@@ -133,7 +134,7 @@ class FeeService
                 'class_id' => $data['class_id'],
                 'fee_id' => $data['fee_id'],
                 'month' => $data['month'] ?  carbon::parse($data['month'])->format('F') : "NA",
-                'student_id' => $data['student_id'],
+                'student_id' => $data['id'],
                 'receipt_no' => $data['receipt_no'],
                 'amount_inr' => $data['amount_inr'],
                 'paid_amount' => $data['paid_amount'],

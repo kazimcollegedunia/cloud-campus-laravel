@@ -40,6 +40,8 @@ class FeeRepository implements FeeRepositoryInterface
             'remarks'     => $data['remarks'] ?? null,
             'receipt_no'        => $data['receipt_no'] ?? null,
             'meta'        => $data['meta'] ?? null,
+            'status' => $data['status'] ?? "pending",
+            'month' => $data['month'] ?? null
         ]);
     }
     
