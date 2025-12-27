@@ -17,6 +17,7 @@ class ApiGatewayService
             "section" => isset($request->section) ?  $request->section : null,
             "role" => isset($request->role) ?  $request->role : 'student',
             "term" => isset($request->search) ?  $request->search : null,
+            "status" => isset($request->status) ?  $request->status : null,
         ];
         return $dataPass;
    }
@@ -48,6 +49,18 @@ class ApiGatewayService
         }
 
         return $fields;
+    }
+
+    public function validateParam($request,$apiType){
+        switch ($apiType) {
+            case "show_teacher_data":
+                $acceptedParam = ['name','subject','phone','email'];
+                break;
+            
+            default:
+                # code...
+                break;
+        }
     }
 
     // public static function paginate($data, $perPage = 15, $page = null, $options = [])

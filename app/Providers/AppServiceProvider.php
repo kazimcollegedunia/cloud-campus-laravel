@@ -11,6 +11,8 @@ use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Eloquent\UserRepository;
 use App\Repositories\Contracts\StudentRepositoryInterface;
 use App\Repositories\Eloquent\StudentRepository;
+use App\Repositories\Contracts\TeacherRepositoryInterface;
+use App\Repositories\Eloquent\TeacherRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AttendanceRepositoryInterface::class, AttendanceRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(StudentRepositoryInterface::class, StudentRepository::class);
+        $this->app->bind(TeacherRepositoryInterface::class, TeacherRepository::class);
     }
 
     /**
