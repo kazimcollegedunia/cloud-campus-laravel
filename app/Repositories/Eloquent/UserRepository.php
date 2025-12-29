@@ -7,6 +7,7 @@ use App\Repositories\Contracts\UserRepositoryInterface;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\Catch_;
+use App\Models\Tenant;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -65,6 +66,12 @@ class UserRepository implements UserRepositoryInterface
                 status: "Fail"
             );
         }
+        
+    }
+
+    public function tenantDetails($dataPass){
+        $dataArr =   Tenant::where('id',$dataPass['tenant_id'])->select('id','school_name','subdomain')->first();
+        return $dataArr;
         
     }
 }

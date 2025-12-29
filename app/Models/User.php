@@ -61,5 +61,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Attendance::class);
     }
+
+    public function userTenantDetails(){
+        return $this->hasOne(Tenant::class,'id');
+    }
    
 }

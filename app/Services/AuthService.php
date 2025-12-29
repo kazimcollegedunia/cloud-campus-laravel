@@ -56,15 +56,32 @@ class AuthService
     public function me(){
         try{
             $userDetails = auth()->user();
-            if($userDetails){
-                return $this->apiGateway::success("success",$userDetails,200);
+            $dataPass['tenant_id'] = $userDetails['tenant_id'];
+            $tenantData = $this->userRepo->tenantDetails($dataPass);
+            $userTenantArr =  $userDetails;
+            $userTenantArr['tenantData'] = $tenantData;
+            // $dataArr = $this->_userDataResponse($userTenantArr);
+            if($userTenantArr){
+                return $userTenantArr;
             }
             return $this->apiGateway::error("error",[],401);
         }catch(Exception $e){
             writeLog('Get user data','me Api fail'. $e->getMessage(),'',$e->getMessage(),'failed');
             return $this->apiGateway::error("error",$e->getMessage(),401);
-        }
-       
-        
+        } 
     }
+
+    // protected function _userDataResponse($userData){
+    //     $data= [];
+    //     if(!empty($userData)){
+    //         $data = [
+    //             'id' => $userData['userData']['id'],
+    //             'name' => $userData['userData']['name'],
+    //             'id' => $userData['userData']['id'],
+    //         ]
+    //     }
+
+    //     return $data;
+
+    // }
 }
