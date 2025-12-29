@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\Auth\RefreshTokenController;
 use App\Http\Controllers\Api\V1\AttendanceController;
 use App\Http\Controllers\Api\V1\DashboardController;
+use App\Http\Controllers\Api\V1\BaseStructureController;
 use App\Http\Middleware\EnsureTokenIsValid;
 
 Route::get('/test', function () {
@@ -44,6 +45,12 @@ Route::prefix('v1')->middleware(["auth:api"])->group(function () {
         Route::prefix('dashboard')->group(function () {
             Route::get('/', [DashboardController::class, 'index']);
         });
+        
+         Route::prefix('base-structure')->group(function () {
+            Route::get('/', [BaseStructureController::class, 'index']);
+        });
+
+
     });
 
 
