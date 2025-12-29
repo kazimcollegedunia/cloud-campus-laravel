@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\V1\Auth\RefreshTokenController;
 use App\Http\Controllers\Api\V1\AttendanceController;
 use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\TestingController;
+use App\Http\Controllers\Api\V1\TeacherController;
 use App\Http\Middleware\EnsureTokenIsValid;
 
 Route::get('/test', function () {
@@ -52,6 +53,11 @@ Route::prefix('v1')->middleware(["auth:api"])->group(function () {
 
         Route::prefix('auth')->group(function () {
             Route::get('me', [LoginController::class, 'me']);             
+        });
+        
+        Route::prefix('teacher-management')->group(function () {
+            Route::apiResource('/', TeacherController::class);
+            Route::get('status-update', [TeacherController::class, 'statusUpdate']); 
         });
     });
 

@@ -65,6 +65,7 @@ class UserRepository implements UserRepositoryInterface
                 response: [],
                 status: "Fail"
             );
+            return $e->getMessage();
         }
         
     }
