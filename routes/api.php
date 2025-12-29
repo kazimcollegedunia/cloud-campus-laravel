@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\Auth\RefreshTokenController;
 use App\Http\Controllers\Api\V1\AttendanceController;
 use App\Http\Controllers\Api\V1\DashboardController;
+use App\Http\Controllers\Api\V1\TestingController;
 use App\Http\Middleware\EnsureTokenIsValid;
 
 Route::get('/test', function () {
@@ -21,6 +22,10 @@ Route::get('/test', function () {
 Route::middleware([EnsureTokenIsValid::class])->get('/test2', function () {
     return 'OK';
 });
+
+Route::get('testing', [TestingController::class, 'index']);
+
+
 
 
 // Route::prefix('v1')->middleware(['auth:api', EnsureTokenIsValid::class])->group(function () {
