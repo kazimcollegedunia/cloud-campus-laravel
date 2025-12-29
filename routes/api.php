@@ -44,6 +44,10 @@ Route::prefix('v1')->middleware(["auth:api"])->group(function () {
         Route::prefix('dashboard')->group(function () {
             Route::get('/', [DashboardController::class, 'index']);
         });
+
+        Route::prefix('auth')->group(function () {
+            Route::get('me', [LoginController::class, 'me']);             
+        });
     });
 
 

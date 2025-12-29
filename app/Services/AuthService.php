@@ -4,8 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Log;
 use App\Repositories\Contracts\UserRepositoryInterface;
-
-
+use Exception;
 use Illuminate\Support\Facades\Auth;
 
 class AuthService
@@ -32,12 +31,12 @@ class AuthService
 
         // Create new access token
         $token = $user->createToken('authToken')->accessToken;
-
+        $userDataArr = $this->me();
         return [
             'status' => true,
             'message' => 'Login successful',
             'token' => $token,
-            'user'  => $user,
+            'user'  => $userDataArr,
         ];
     }
 
@@ -52,5 +51,20 @@ class AuthService
             ];
 
         return  $this->userRepo->createUser($userDetails); 
+    }
+    
+    public function me(){
+        try{
+            $userDetails = auth()->user();
+            if($userDetails){
+                return $this->apiGateway::success("success",$userDetails,200);
+            }
+            return $this->apiGateway::error("error",[],401);
+        }catch(Exception $e){
+            writeLog('Get user data','me Api fail'. $e->getMessage(),'',$e->getMessage(),'failed');
+            return $this->apiGateway::error("error",$e->getMessage(),401);
+        }
+       
+        
     }
 }

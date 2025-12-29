@@ -41,6 +41,12 @@ class LoginController extends Controller
             status: 'success'
         );
 
-        return $this->apiGateway::success($data['message'],$data,200);
+        return $this->apiGateway::success($data['message'], $data ,200);
+    }
+
+
+
+    public function me(){
+        return $this->auth->me();
     }
 }
