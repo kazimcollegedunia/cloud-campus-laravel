@@ -58,6 +58,18 @@ class ApiGatewayService
         $randumNumber = $tenantDomain.'-'.rand(100000, 999999);
         return $this->repo->isAdmissionNoExists($randumNumber) ? $this->generatedAdmissionToken($tenantDomain): $randumNumber;
     }
+    
+    public function validateParam($request,$apiType){
+        switch ($apiType) {
+            case "show_teacher_data":
+                $acceptedParam = ['name','subject','phone','email'];
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+    }
 
     // public static function paginate($data, $perPage = 15, $page = null, $options = [])
     // {
