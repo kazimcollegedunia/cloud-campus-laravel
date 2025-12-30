@@ -65,5 +65,9 @@ class User extends Authenticatable
     public function userTenantDetails(){
         return $this->hasOne(Tenant::class,'id');
     }
+    
+    public function tenant(){
+        return $this->belongsTo(Tenant::class);
+    }
    
 }

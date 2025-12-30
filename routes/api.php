@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\Auth\RefreshTokenController;
 use App\Http\Controllers\Api\V1\AttendanceController;
 use App\Http\Controllers\Api\V1\DashboardController;
+use App\Http\Controllers\Api\V1\FeeController;
 use App\Http\Middleware\EnsureTokenIsValid;
 
 Route::get('/test', function () {
@@ -46,7 +47,13 @@ Route::prefix('v1')->middleware(["auth:api"])->group(function () {
         });
 
         Route::prefix('auth')->group(function () {
-            Route::get('me', [LoginController::class, 'me']);             
+            Route::get('me', [LoginController::class, 'me']);   
+        });
+                  
+        Route::prefix('fee')->group(function () {
+            Route::apiResource('/', FeeController::class);
+            Route::get('invoices-list', [FeeController::class, 'getFeeInvoices']);
+            Route::get('types', [FeeController::class, 'getFeeTypes']);
         });
     });
 

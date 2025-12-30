@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('fee_type_id');
+            $table->unsignedBigInteger('class_id');
 
             $table->decimal('amount_inr', 10, 2);
             $table->decimal('paid_amount', 10, 2)->nullable();
@@ -26,6 +27,7 @@ return new class extends Migration
 
             $table->string('receipt_no')->nullable();
             $table->timestamp('paid_at')->nullable();
+            $table->char('month')->nullable();
 
             $table->text('remarks')->nullable();
             $table->json('meta')->nullable();

@@ -48,5 +48,6 @@ class LoginController extends Controller
 
     public function me(){
         return $this->auth->me();
+        return $this->apiGateway::success($data['message'],$data,201);
     }
 }

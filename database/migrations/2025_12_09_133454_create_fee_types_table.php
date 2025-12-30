@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('fee_types', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tenant_id');
+            $table->unsignedBigInteger('class_id');
             $table->string('name');
             $table->decimal('amount_inr', 10, 2)->default(0);
             $table->enum('frequency', ['monthly','yearly','one_time','custom'])->default('monthly');
