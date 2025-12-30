@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Services\AuthService;
 use App\Services\ApiGatewayService;
+use Exception;
 
 class LoginController extends Controller
 {
@@ -47,7 +48,12 @@ class LoginController extends Controller
 
 
     public function me(){
-        return $this->auth->me();
-        return $this->apiGateway::success($data['message'],$data,201);
+        try{
+            return $this->auth->me();
+        }Catch(Exception $e){
+            return $e->getMessage();
+        }
+        
+        // return $this->apiGateway::success($data['message'],$data,201);
     }
 }

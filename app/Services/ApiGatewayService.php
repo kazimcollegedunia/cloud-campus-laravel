@@ -54,11 +54,10 @@ class ApiGatewayService
         return $fields;
     }
 
-    protected function generatedRandomToken($tenantDomain){
-        $randumNumber = $tenantDomain.'-'.rand(100000, 999999);
-        return $this->repo->isAdmissionNoExists($randumNumber) ? $this->generatedAdmissionToken($tenantDomain): $randumNumber;
-    }
-    
+    // protected function generatedRandomToken($tenantDomain){
+    //     $randumNumber = $tenantDomain.'-'.rand(100000, 999999);
+    //     return $this->repo->isAdmissionNoExists($randumNumber) ? $this->generatedAdmissionToken($tenantDomain): $randumNumber;
+    // }
     public function validateParam($request,$apiType){
         switch ($apiType) {
             case "show_teacher_data":

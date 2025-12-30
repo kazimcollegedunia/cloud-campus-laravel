@@ -9,6 +9,7 @@ class LogService
     {
         return SystemLog::create([
             'user_id'      => auth()->check() ? auth()->id() : null,
+            'tenant_id'      => auth()->check() ? auth()->user()->tenant_id : null,
             'action'       => $action,
             'description'  => $description,
             'request_data' => $requestData,

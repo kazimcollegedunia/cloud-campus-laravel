@@ -20,7 +20,7 @@ class TeacherController extends Controller
     {
         $this->teacherService = $teacherService;
         $this->apiGateway = $apiGateway;
-        // $this->tenantId = auth()->user()->tenant_id;
+        $this->tenantId = auth()->user()->tenant_id;
     }
 
     public function index(Request $request){

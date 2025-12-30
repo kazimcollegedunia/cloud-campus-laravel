@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('system_logs', function (Blueprint $table) {
               $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('tenant_id')->nullable();
             $table->string('action'); // signup, login, etc.
             $table->text('description')->nullable();
             $table->json('request_data')->nullable();

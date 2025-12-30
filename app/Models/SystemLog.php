@@ -8,6 +8,7 @@ class SystemLog extends Model
 {
     protected $fillable = [
             'user_id',
+            'tenant_id',
             'action',
             'description',
             'request_data',
