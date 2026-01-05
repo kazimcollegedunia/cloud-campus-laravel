@@ -107,6 +107,10 @@ class StudentRepository implements StudentRepositoryInterface
                 ->get();
     }
 
+    public function studentData($dataPass){
+        return $this->model->where('tenant_id',$dataPass['tenant_id'])->count();
+    }
+
 
     // public function getStudentFeeList($dataPass){
         

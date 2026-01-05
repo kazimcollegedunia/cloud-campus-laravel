@@ -68,4 +68,9 @@ class TeacherRepository implements TeacherRepositoryInterface
         
     }
 
+    public function teacherDetails($dataPass) 
+    {
+        return $this->model->with('userDetails')->where('id',$dataPass['teacher_id'])->first();
+    }
+
 }

@@ -8,6 +8,7 @@ interface StudentRepositoryInterface
     public function createStudent(array $data);
     public function isAdmissionNoExists($adminsionId);
     public function getStudentFeeList(array $data);
+    public function studentData(array $data);
     
     // public function find($id);
     // public function find($id);

@@ -15,6 +15,8 @@ use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\FeeController;
 use App\Http\Controllers\Api\V1\TestingController;
 use App\Http\Controllers\Api\V1\TeacherController;
+use App\Http\Controllers\Api\V1\ClassController;
+use App\Http\Controllers\Api\V1\SectionController;
 use App\Http\Middleware\EnsureTokenIsValid;
 
 Route::get('/test', function () {
@@ -65,6 +67,14 @@ Route::prefix('v1')->middleware(["auth:api"])->group(function () {
         Route::prefix('teacher-management')->group(function () {
             Route::apiResource('/teacher', TeacherController::class);
             Route::get('status-update', [TeacherController::class, 'statusUpdate']); 
+            Route::get('teacher-details', [TeacherController::class, 'teacherDetails']); 
+        });
+
+        Route::prefix('/admin')->group(function () {
+            Route::apiResource('/class', ClassController::class);
+            Route::apiResource('/section', SectionController::class);
+            // Route::post('/assigne-class-section', [TeacherController::class,"assigneClassSection"]);
+            Route::get('/assigne-class-section', [ClassController::class,"getClassesWithSections"]);
         });
     });
 

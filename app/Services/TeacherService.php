@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use PhpParser\Node\Expr\Throw_;
 
 class TeacherService
 {
@@ -149,6 +150,7 @@ class TeacherService
                 "salary" => $list->salary,
                 "address" => $list->address,
                 "subject" => $subjects,
+                "status" => ucfirst($list->userDetails->status),
             ];
         }
         return $resultArr;
@@ -172,5 +174,56 @@ class TeacherService
         
     }
 
+    public function teacherDetails($dataPass){
+        try{
+            $teacherDbData =  $this->repo->teacherDetails($dataPass);
+            if(!$teacherDbData) {
+                throw new \Exception('teacher details getting error');
+            }
+
+            $teacherDataArr = $this->_prapareTeacherDetailsData($teacherDbData);
+
+            return [
+                    'status' => false,
+                     'message' => "teacher details data",
+                     'data' => $teacherDataArr
+                    ];
+        }catch(Exception $e){
+            writeLog('teacher-details-api',"getting eror",$dataPass,$e->getMessage(),'failed');
+            return [
+                'status' => true,
+                'message' => $e->getMessage() 
+            ];
+        }
+    }
+
+    protected function _prapareTeacherDetailsData($teacherDbData){
+        $teacherDataArr = [];
+        if(!empty($teacherDbData)){
+            $teacherDataArr = [
+                "teacher_id" => $teacherDbData->id,
+                "tenant_id" => $teacherDbData->tenant_id,
+                "user_id" => $teacherDbData->user_id,
+                "name" => $teacherDbData->userDetails->name,
+                "email" => $teacherDbData->userDetails->email,
+                "phone" => $teacherDbData->userDetails->phone,
+                "designation" => $teacherDbData->designation,
+                "qualification" => $teacherDbData->qualification,
+                "experience_years" => $teacherDbData->experience_years."Years",
+                "joining_date" => $teacherDbData->joining_date,
+                "gender" => $teacherDbData->gender,
+                "dob" => $teacherDbData->dob,
+                "address" => $teacherDbData->address,
+                "emergency_contact" => $teacherDbData->emergency_contact,
+                "status" => ucfirst($teacherDbData->status),
+                "recent_ctivity" => [["Assigned to Class 10-A" => "1 week ago"]],
+                "assigned_classes" => ["Class 1 - A" ,"Class 2 - C","Class 3 - B","Class 4 - A"],
+            ];
+        }
+        return $teacherDataArr;
+
+
+
+    }
 
 }

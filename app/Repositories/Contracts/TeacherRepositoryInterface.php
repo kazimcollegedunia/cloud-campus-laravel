@@ -8,6 +8,7 @@ interface TeacherRepositoryInterface
     public function teacherSubject(array $subjects);
     public function all(array $dataPass);
     public function statusUpdate(array $data);
+    public function teacherDetails(array $dataPass);
     // public function create(array $data);
     // public function update($id, array $data);
     // public function delete($id);

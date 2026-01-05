@@ -19,6 +19,6 @@ class Teacher extends Model
     }
 
     public function userDetails(){
-        return $this->hasOne(User::class,'id','user_id')->select('id','tenant_id','name','email','phone');
+        return $this->hasOne(User::class,'id','user_id')->select('id','tenant_id','name','email','phone','status');
     }
 }

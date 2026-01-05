@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Log;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Repositories\Contracts\StudentRepositoryInterface;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,10 +12,16 @@ class AuthService
 {
     public $userRepo;
     public $apiGateway;
+    public $studentRepo;
 
-    public function __construct(UserRepositoryInterface $userRepo,ApiGatewayService $apiGateway){
+    public function __construct(
+        UserRepositoryInterface $userRepo,
+        ApiGatewayService $apiGateway,
+        StudentRepositoryInterface $studentRepo
+    ){
         $this->userRepo = $userRepo;
         $this->apiGateway = $apiGateway;
+        $this->studentRepo = $studentRepo;
     }
 
     public function login(array $credentials)
@@ -58,8 +65,10 @@ class AuthService
             $userDetails = auth()->user();
             $dataPass['tenant_id'] = $userDetails['tenant_id'];
             $tenantData = $this->userRepo->tenantDetails($dataPass);
+            $studentData = $this->studentRepo->studentData($dataPass);
             $userTenantArr =  $userDetails;
             $userTenantArr['tenantData'] = $tenantData;
+            $userTenantArr['studentData'] = ["student_count" => $studentData];
             // $dataArr = $this->_userDataResponse($userTenantArr);
             if($userTenantArr){
                 return $userTenantArr;

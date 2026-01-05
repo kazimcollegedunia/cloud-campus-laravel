@@ -55,8 +55,24 @@ class TeacherController extends Controller
     public function statusUpdate(Request $request){
         // $request->role = 'admin';
         $dataPass = $this->apiGateway->prepareDataPass($request);
-        $dataPass['teacher_id'] = $request->teacher_id;
         $serviceData =   $this->teacherService->statusUpdate($dataPass);
         return $this->apiGateway::success('Success',$serviceData);
+    }
+
+    public function teacherDetails(Request $request){
+        $dataPass = $this->apiGateway->prepareDataPass($request);
+        $serviceData =   $this->teacherService->teacherDetails($dataPass);
+        // dd($serviceData);
+        if($serviceData['status']){
+            return $this->apiGateway::error($serviceData['message'],[],403);
+            
+        }
+        return $this->apiGateway::success($serviceData['message'],$serviceData['data']);
+        
+
+    }
+
+    public function assigneClassSection(Request $request){
+        dd($request->all());
     }
 }

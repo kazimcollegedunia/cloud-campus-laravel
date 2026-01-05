@@ -21,6 +21,7 @@ class ApiGatewayService
             "term" => isset($request->search) ?  $request->search : null,
             "student_id" => isset($request->student_id) ?  $request->student_id : null,
             "status" => isset($request->status) ?  strtolower($request->status) : null,
+            "teacher_id" => isset($request->teacher_id) ?  $request->teacher_id : null,
         ];
         return $dataPass;
    }
