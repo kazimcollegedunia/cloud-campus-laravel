@@ -35,6 +35,22 @@ class FeeService
         $tenantDomain = $tenantDomain = Tenant::find($tenantId)->subdomain ?? null;
         $receiptNo = $this->generatedRandomToken(ucwords($tenantDomain));
 
+        $matchData = [
+            "student_id" => $request->student_id,
+            "fee_type_id" => $request->fee_type_id,
+            'month' => $request->month ?? Carbon::now()->format('Y-m') ,
+        ];
+
+        $isfeeExist = $this->repo->isfeeExist($matchData);
+
+        if($isfeeExist){
+            return [
+                'status' => false,
+                'message' => "Fees Already submited",
+            ];
+        }
+        
+
         $extra = [
             'submitted_by' => auth()->id(),
             'receipt_no' => $receiptNo,
@@ -63,7 +79,11 @@ class FeeService
                 $payload
             );
 
-            return $fee;
+         return [
+                'status' => true,
+                'message' => "Fee submited Successfully",
+                'data' => $fee,
+            ];
 
         } catch (\Exception $e) {
 
@@ -76,7 +96,11 @@ class FeeService
                 $e->getMessage()
             );
 
-            throw $e;
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+                'data' => [],
+            ];
         }
     }
 
@@ -120,6 +144,7 @@ class FeeService
     }
 
     public function getFeeInvoices($dataPass){
+        // dd($dataPass);
          $data = $this->studentRepo->getStudentFeeList($dataPass);
         return $this->_preparedData($data,$dataPass);
     }
@@ -139,7 +164,7 @@ class FeeService
                 'amount_inr' => $data['amount_inr'],
                 'paid_amount' => $data['paid_amount'],
                 'due_date' => $dataPass['month'] ?  carbon::parse($dataPass['month'])->format('F') : "NA",
-                'status' => $status ,
+                'status' => ucfirst($status) ,
                 'action' => $this->getActionButton($status) ,
                 'fee_type_name' => $data['fee_type_name'],
                 'fee_type_id' => $data['fee_type_id'],
@@ -185,9 +210,9 @@ class FeeService
     public function getActionButton($status){
         $status = strtolower($status);
         $actionBtn = [
-                'paid' => ['View','Receipt'],
-                'pending' => ['Reminder','Mark as paid'],
-                'overdue' => ['Reminder','Mark as paid'],
+                'paid' => ["first_btn"=>'View',"second_btn" => 'Receipt'],
+                'pending' => ["first_btn" =>'Reminder',"second_btn" =>'Mark as paid'],
+                'overdue' => ["first_btn"=> 'Send Notice',"second_btn" => 'Mark as paid'],
         ];
         return $actionBtn[$status];
     }

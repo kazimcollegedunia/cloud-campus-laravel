@@ -35,13 +35,11 @@ class FeeController extends Controller
 
     public function store(FeeStoreRequest $request)
     {
-        $payload = $this->apiGateway->prepareDataPass($request);
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Fee record created successfully',
-            'data' => $this->feeService->store($request),
-        ], 201);
+        $feeStoreDbData = $this->feeService->store($request);
+        if(!$feeStoreDbData['status']){
+            return $this->apiGateway::error($feeStoreDbData['message'],[]);
+        }
+        return $this->apiGateway::success($feeStoreDbData['message'],$feeStoreDbData['data']);
     }
 
     public function show($id)
@@ -86,5 +84,9 @@ class FeeController extends Controller
         $feeTypeData = $this->feeTypeService->getFeeType($dataPass);
         return $this->apiGateway::success('Success',$feeTypeData);
 
+    }
+
+    public function sessionMonthWithYears(){
+        return $this->apiGateway::success('Success',sessionMonthWithYears());
     }
 }

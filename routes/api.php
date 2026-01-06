@@ -34,6 +34,10 @@ Route::get('testing', [TestingController::class, 'index']);
 
 // Route::prefix('v1')->middleware(['auth:api', EnsureTokenIsValid::class])->group(function () {
 Route::prefix('v1')->middleware(["auth:api"])->group(function () {
+        // Common Apis start
+        Route::get('years-month', [FeeController::class, 'sessionMonthWithYears']);
+        // Common Apis End
+
         Route::get('employees/search', [EmployeeController::class, 'search']);
         Route::apiResource('employees', EmployeeController::class);
         Route::apiResource('departments', DepartmentController::class);

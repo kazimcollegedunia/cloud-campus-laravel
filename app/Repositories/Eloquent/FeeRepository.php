@@ -91,4 +91,12 @@ class FeeRepository implements FeeRepositoryInterface
     public function isAdmissionNoExists(string $randumNumber){
         return $this->model->where('receipt_no', $randumNumber)->exists();
     }
+
+     public function isfeeExist(array $dataPass){
+        return $this->model
+            ->where('student_id', $dataPass['student_id'])
+            ->where('fee_type_id', $dataPass['fee_type_id'])
+            ->where('month', $dataPass['month'])
+            ->exists();
+     }
 }

@@ -10,6 +10,7 @@ interface FeeRepositoryInterface
     public function show(array $data);
     public function delete(array $data);
     public function isAdmissionNoExists(string $randumNumber);
+    public function isfeeExist(array $data);
     
 
     // Extra required functions
