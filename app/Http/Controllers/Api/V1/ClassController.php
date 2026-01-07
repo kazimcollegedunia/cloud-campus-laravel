@@ -23,8 +23,12 @@ class ClassController extends Controller
      */
     public function index(Request $request)
     {
-        $dataPass = $apiGateway->prepareDataPass($request);
-        $this->classService->index($dataPass);
+        $dataPass = $this->apiGateway->prepareDataPass($request);
+        $classDbData = $this->classService->index($dataPass);
+        // dd($classDbData);
+        if($classDbData['status']){
+            return $this->apiGateway::success($classDbData['message'],$classDbData['data']);
+        }
     }
 
     /**

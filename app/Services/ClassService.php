@@ -7,10 +7,7 @@ use App\Repositories\Contracts\TeacherRepositoryInterface;
 use App\Services\ApiGatewayService;
 use Exception;
 use App\Models\SchoolClass;
-use Illuminate\Auth\Events\Failed;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use PhpParser\Node\Expr\Throw_;
 
 class ClassService
 {
@@ -26,7 +23,15 @@ class ClassService
     }
 
    public function index($dataPass){
-    
+        $storeDbData = SchoolClass::where('tenant_id',auth()->user()->tenant_id)->get();
+        if($storeDbData){
+            return [
+                "status"=> true,
+                "message"=> "Class fetch successfully",
+                "data"=> $storeDbData,
+            ];
+        }
+        
    }
 
    public function store($request){
@@ -142,7 +147,7 @@ class ClassService
         return [
             "status"=>false,
             "data"=>$result
-        ];
+            ];
         }
 
 }

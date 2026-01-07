@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Tenant;
 use Exception;
 use Carbon\Carbon;
+use App\DTOs\ServiceResult;
 
 class FeeTypeService
 {
@@ -23,5 +24,33 @@ class FeeTypeService
     public function getFeeType($dataPass){
 
         return $types = $this->repo->index($dataPass);
+    }
+
+    //Admin part Fee type 
+
+    public function feeTypeLists($filters){
+       $dbData = $this->repo->list($filters);
+        if (empty($dbData)) {
+            return ServiceResult::error(
+                    'No fee types found',
+                    [],
+                    404
+                );
+            }
+
+            return ServiceResult::success(
+                'Fee types fetched successfully',
+                $dbData
+            );
+    }
+
+    public function feeTypeStore(){
+    }
+
+    public function feeTypeUpdate(){
+    }
+
+    public function feeTypeStatusUpdate(){
+
     }
 }

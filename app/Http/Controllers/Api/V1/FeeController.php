@@ -9,8 +9,9 @@ use App\Services\FeeService;
 use App\Services\FeeTypeService;
 use App\Services\ApiGatewayService;
 use Illuminate\Http\Request;
+use App\Http\Requests\Api\FeeIndexRequest;
 
-class FeeController extends Controller
+class FeeController extends BaseController
 {
     protected $feeService;
     protected $apiGateway;
@@ -89,4 +90,30 @@ class FeeController extends Controller
     public function sessionMonthWithYears(){
         return $this->apiGateway::success('Success',sessionMonthWithYears());
     }
+
+    public function FeeFrequency(){
+        return $this->apiGateway::success('Success',FeeFrequency());
+    }
+
+    public function feeTypeLists(FeeIndexRequest $request){
+        $feeTypeListsDbData = $this->feeTypeService->feeTypeLists($request);
+        return $this->respond($feeTypeListsDbData);
+
+    }
+
+    public function feeTypeStore(Request $request){
+        $feeTypeListsDbData = $this->feeTypeService->feeTypeLists($request);
+        return $this->respond($feeTypeListsDbData);
+    }
+
+    public function feeTypeUpdate(Request $request){
+        $feeTypeListsDbData = $this->feeTypeService->feeTypeLists($request);
+        return $this->respond($feeTypeListsDbData);
+    }
+
+    public function feeTypeStatusUpdate(FeeIndexRequest $request){
+        $feeTypeListsDbData = $this->feeTypeService->feeTypeLists($request);
+        return $this->respond($feeTypeListsDbData);
+    }
+
 }

@@ -43,4 +43,8 @@ class FeeTypeRepository implements FeeTypeRepositoryInterface
             'meta'        => $data['meta'] ?? null,
         ]);
     }
+
+    public function list($filters){
+        return [];//[["name" => "kazim"]];
+    }
 }

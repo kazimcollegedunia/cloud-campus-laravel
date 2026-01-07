@@ -36,6 +36,7 @@ Route::get('testing', [TestingController::class, 'index']);
 Route::prefix('v1')->middleware(["auth:api"])->group(function () {
         // Common Apis start
         Route::get('years-month', [FeeController::class, 'sessionMonthWithYears']);
+        Route::get('fee-frequency', [FeeController::class, 'FeeFrequency']);
         // Common Apis End
 
         Route::get('employees/search', [EmployeeController::class, 'search']);
@@ -78,7 +79,13 @@ Route::prefix('v1')->middleware(["auth:api"])->group(function () {
             Route::apiResource('/class', ClassController::class);
             Route::apiResource('/section', SectionController::class);
             // Route::post('/assigne-class-section', [TeacherController::class,"assigneClassSection"]);
-            Route::get('/assigne-class-section', [ClassController::class,"getClassesWithSections"]);
+            Route::get('/class-with-section', [ClassController::class,"getClassesWithSections"]);
+            Route::prefix('/fee-type')->group(function () {
+                Route::get('/lists', [FeeController::class,"feeTypeLists"]);
+                Route::post('/store', [FeeController::class,"feeTypeStore"]);
+                Route::put('/update', [FeeController::class,"feeTypeUpdate"]);
+                Route::put('/status-update', [FeeController::class,"feeTypeStatusUpdate"]);
+            });
         });
     });
 

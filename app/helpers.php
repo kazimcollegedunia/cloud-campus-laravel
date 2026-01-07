@@ -48,3 +48,23 @@ if (!function_exists('sessionMonthWithYears')) {
         return $finalMonths;
     }
 }
+
+if (!function_exists('FeeFrequency')) {
+    /**
+     * Get academic session months (March → February)
+     *
+     * @param int|null $year  Academic start year (e.g. 2024)
+     * @return array
+     */
+   function FeeFrequency(?int $year = null): array
+    {
+        $frequencies = [
+            ['lable' => 'monthly',    'value' => 'Monthly'],
+            ['lable' => 'quarterly' , 'value' => 'Quarterly'],
+            ['lable' => 'halfyearly', 'value' => 'Half Yearly'],
+            ['lable' => 'yearly', 'value' => 'Yearly']
+        ];
+        
+        return $frequencies;
+    }
+}
