@@ -2,15 +2,9 @@
 
 namespace App\Services;
 
-use App\Repositories\Contracts\FeeRepositoryInterface;
 use App\Repositories\Contracts\FeeTypeRepositoryInterface;
 use App\Repositories\Contracts\StudentRepositoryInterface;
-use Illuminate\Support\Facades\DB;
-use App\Models\Tenant;
-use Exception;
-use Carbon\Carbon;
 use App\DTOs\ServiceResult;
-
 class FeeTypeService
 {
     protected $repo;
@@ -34,7 +28,7 @@ class FeeTypeService
             return ServiceResult::error(
                     'No fee types found',
                     [],
-                    404
+                    204
                 );
             }
 

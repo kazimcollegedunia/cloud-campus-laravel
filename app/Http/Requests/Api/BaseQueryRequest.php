@@ -6,7 +6,7 @@ namespace App\Http\Requests\Api;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
-
+use App\Support\AuthContext;
 
 abstract class BaseQueryRequest extends FormRequest
 {
@@ -20,11 +20,15 @@ abstract class BaseQueryRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
+
+        $tenantId = AuthContext::tenantId();
+        $userId   = AuthContext::userId();
         $this->merge([
-            'tenant_id'  => $this->input('tenant_id') ?? auth()->user()?->tenant_id,
-            'user_id'    => $this->input('user_id')   ?? auth()->id(),
+            'tenant_id'  => $tenantId,
+            'user_id'    => $userId,
             'start_date' => $this->input('start_date') 
                             ?? now()->startOfMonth()->toDateString(),
+            'term'    => $this->input('start_date') ?? null
         ]);
     }
 

@@ -13,21 +13,11 @@ use App\Http\Controllers\Api\V1\Auth\RefreshTokenController;
 use App\Http\Controllers\Api\V1\AttendanceController;
 use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\FeeController;
-use App\Http\Controllers\Api\V1\TestingController;
 use App\Http\Controllers\Api\V1\TeacherController;
 use App\Http\Controllers\Api\V1\ClassController;
 use App\Http\Controllers\Api\V1\SectionController;
 use App\Http\Middleware\EnsureTokenIsValid;
 
-Route::get('/test', function () {
-    return response()->json(['message' => 'API working!']);
-});
-
-Route::middleware([EnsureTokenIsValid::class])->get('/test2', function () {
-    return 'OK';
-});
-
-Route::get('testing', [TestingController::class, 'index']);
 
 
 
@@ -39,14 +29,11 @@ Route::prefix('v1')->middleware(["auth:api"])->group(function () {
         Route::get('fee-frequency', [FeeController::class, 'FeeFrequency']);
         // Common Apis End
 
-        Route::get('employees/search', [EmployeeController::class, 'search']);
-        Route::apiResource('employees', EmployeeController::class);
-        Route::apiResource('departments', DepartmentController::class);
+        // Route::get('employees/search', [EmployeeController::class, 'search']);
+        // Route::apiResource('employees', EmployeeController::class);
+        // Route::apiResource('departments', DepartmentController::class);
         Route::apiResource('student', StudentController::class);
         Route::get('student-lists', [StudentController::class,"studentLists"]);
-        // Route::get('all-class', [StudentController::class, 'getClass']);
-        // Route::get('all-section', [StudentController::class,'getSection']);
-        // Route::get('all-student', [StudentController::class,'getStudent']);
 
         Route::prefix('attendance')->group(function () {
             Route::post('mark', [AttendanceController::class, 'markAttendance']);
