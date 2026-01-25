@@ -28,7 +28,8 @@ abstract class BaseQueryRequest extends FormRequest
             'user_id'    => $userId,
             'start_date' => $this->input('start_date') 
                             ?? now()->startOfMonth()->toDateString(),
-            'term'    => $this->input('start_date') ?? null
+            'term'    => $this->input('term')
+                        ?? $this->input('search'),
         ]);
     }
 

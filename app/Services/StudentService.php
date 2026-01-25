@@ -8,6 +8,7 @@ use App\Services\ApiGatewayService;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\SendWelcomeEmailJob;
+use App\DTOs\ServiceResult;
 
 class StudentService
 {
@@ -35,7 +36,18 @@ class StudentService
         $dataPass['fields'] = $fields;
         $studentData = $this->repo->all($dataPass);
 
-        return $studentData;
+        if (empty($studentData)) {
+            return ServiceResult::error(
+                    'No Student list found',
+                    [],
+                    204
+                );
+            }
+
+            return ServiceResult::success(
+                'Student list fetched successfully',
+                $studentData
+            );
     }
 
     public function createStudent(array $data)
@@ -87,21 +99,25 @@ class StudentService
 
             DB::commit();
 
-            return [
-                'status'  => true,
-                'message' => 'Student created successfully',
-                'user'    => $user,
-                'student' => $student
-            ];
+            // return [
+            //     'status'  => true,
+            //     'message' => 'Student created successfully',
+            //     'user'    => $user,
+            //     'student' => $student
+            // ];
+
+             return ServiceResult::success(
+                'Student list fetched successfully',
+                $student
+            );
 
         } catch (\Exception $e) {
-                DB::rollBack();
-
-                return [
-                    'status' => false,
-                    'message' => 'Something went wrong',
-                    'error'   => $e->getMessage()
-                ];
+            DB::rollBack();
+            return ServiceResult::error(
+                    $e->getMessage(),
+                    [],
+                    205
+                );
         }
     }
 
